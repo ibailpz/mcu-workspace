@@ -19,6 +19,12 @@ public class MySettingsFragment extends PreferenceFragment implements
 		PreferenceManager.getDefaultSharedPreferences(getActivity())
 				.registerOnSharedPreferenceChangeListener(this);
 
+		findPreference("notificacions_interval").setSummary(
+				PreferenceManager.getDefaultSharedPreferences(getActivity())
+						.getString("notificacions_interval", ""));
+		findPreference("general_interval").setSummary(
+				PreferenceManager.getDefaultSharedPreferences(getActivity())
+						.getString("general_interval", ""));
 	}
 
 	@Override
