@@ -10,6 +10,7 @@
     <string name="parking_name">Name</string>
     <string name="parking_places">Places</string>
     <string name="parking_address">Address</string>
+    <string name="notification">Notification</string>
     <string name="notifications">Notifications</string>
     <string name="notifications_interval">Notifications interval</string>
     <string name="general_interval">General interval</string>

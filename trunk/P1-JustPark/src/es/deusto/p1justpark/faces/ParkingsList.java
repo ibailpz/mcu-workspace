@@ -3,6 +3,7 @@ package es.deusto.p1justpark.faces;
 import java.util.ArrayList;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,7 @@ public class ParkingsList extends ListActivity implements
 
 	private static final String STATE_TYPE_LIST = "all_or_favorites";
 	private static final int settingsIntent = 1;
+	private static final int viewParking = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -183,15 +185,15 @@ public class ParkingsList extends ListActivity implements
 		if (arrParkings == null) {
 			arrParkings = new ArrayList<Parking>();
 			arrParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839));
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false));
 			arrParkings.add(new Parking(2, "Parking El Corte Ingles",
-					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936));
+					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false));
 		}
 
 		if (arrFavoriteParkings == null) {
 			arrFavoriteParkings = new ArrayList<Parking>();
 			arrFavoriteParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839));
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false));
 		}
 	}
 
@@ -199,7 +201,20 @@ public class ParkingsList extends ListActivity implements
 		Parking parking = arrParkings.get(position);
 		Intent intent = new Intent(this, ParkingView.class);
 		intent.putExtra("parking", parking);
-		startActivity(intent);
+		startActivityForResult(intent, viewParking);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == viewParking) {
+			if (resultCode == Activity.RESULT_OK) {
+				Parking parking = (Parking) data.getExtras().getSerializable(
+						"parking");
+				updateParking(parking);
+			}
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
@@ -260,12 +275,29 @@ public class ParkingsList extends ListActivity implements
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onDestroy();
 		Log.i("Stop", "Saving data");
 		(new ParkingManager(getApplicationContext())).saveParkings(arrParkings);
-		(new ParkingManager(getApplicationContext())).saveFavoriteParkings(arrFavoriteParkings);
+		(new ParkingManager(getApplicationContext()))
+				.saveFavoriteParkings(arrFavoriteParkings);
+	}
+
+	private void updateParking(Parking parking) {
+		for (int i = 0; i < arrParkings.size(); i++) {
+			if (arrParkings.get(i).getId() == parking.getId()) {
+				arrParkings.remove(i);
+				arrParkings.add(parking);
+			}
+		}
+		for(int j = 0; j < arrFavoriteParkings.size(); j++) {
+			if (arrFavoriteParkings.get(j).getId() == parking.getId()) {
+				arrFavoriteParkings.remove(j);
+				arrFavoriteParkings.add(parking);
+			}
+		}
+		adpParkings.notifyDataSetChanged();
 	}
 }

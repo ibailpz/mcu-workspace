@@ -12,9 +12,10 @@ public class Parking implements Serializable{
 	private String places;
 	private double lat;
 	private double lng;
+	private boolean notifications;
 
 	public Parking(int id, String name, String address, String places,
-			double lat, double lng) {
+			double lat, double lng, boolean notificacions) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -22,6 +23,7 @@ public class Parking implements Serializable{
 		this.places = places;
 		this.lat = lat;
 		this.lng = lng;
+		this.notifications = notificacions;
 	}
 
 	public int getId() {
@@ -70,6 +72,14 @@ public class Parking implements Serializable{
 
 	public void setLng(double lng) {
 		this.lng = lng;
+	}
+
+	public boolean isNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(boolean notifications) {
+		this.notifications = notifications;
 	}
 	
 	

@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
@@ -51,11 +52,21 @@ public class ParkingView extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onBackPressed() {
+		Parking newParking = getParking();
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra("parking", newParking);
+		setResult(RESULT_OK, resultIntent);
+		finish();
+	}
+
 	private void setParking(Parking parking) {
 		TextView ed1 = (TextView) findViewById(R.id.parking_name);
 		TextView ed2 = (TextView) findViewById(R.id.parking_places);
 		TextView ed3 = (TextView) findViewById(R.id.parking_address);
 		TextView ed4 = (TextView) findViewById(R.id.coords);
+		CheckBox cb = (CheckBox) findViewById(R.id.cb_notification);
 
 		ed1.setText(parking.getName());
 		ed1.setTypeface(null, Typeface.BOLD);
@@ -65,5 +76,12 @@ public class ParkingView extends Activity {
 		ed3.setTypeface(null, Typeface.BOLD);
 		ed4.setText(parking.getLat() + "," + parking.getLng());
 		ed3.setTypeface(null, Typeface.BOLD);
+		cb.setChecked(parking.isNotifications());
+	}
+	
+	private Parking getParking() {
+		CheckBox notification = (CheckBox) findViewById(R.id.cb_notification);
+		parking.setNotifications(notification.isChecked());
+		return parking;
 	}
 }
