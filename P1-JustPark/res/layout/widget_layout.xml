@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView android:id="@+id/parking_name"
+    <TextView android:id="@+id/widget_parking_name"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textStyle="bold"
         android:textSize="25sp"/>
 
-    <TextView android:id="@+id/parking_places"
+    <TextView android:id="@+id/widget_parking_places"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="12sp"/>
