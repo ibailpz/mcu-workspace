@@ -14,13 +14,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="es.deusto.p1justpark.MainActivity"
+            android:name="es.deusto.p1justpark.faces.ParkingsList"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="es.deusto.p1justpark.faces.ParkingView"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="es.deusto.p1justpark.settings.MySettingsActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
