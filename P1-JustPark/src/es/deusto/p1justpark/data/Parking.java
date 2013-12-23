@@ -10,13 +10,18 @@ public class Parking implements Serializable{
 	private String name;
 	private String address;
 	private String places;
+	private double lat;
+	private double lng;
 
-	public Parking(int id, String name, String address, String places) {
+	public Parking(int id, String name, String address, String places,
+			double lat, double lng) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.places = places;
+		this.lat = lat;
+		this.lng = lng;
 	}
 
 	public int getId() {
@@ -50,4 +55,22 @@ public class Parking implements Serializable{
 	public void setPlaces(String places) {
 		this.places = places;
 	}
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	
+	
 }

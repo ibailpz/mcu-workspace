@@ -6,8 +6,11 @@ import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +24,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
+import es.deusto.p1justpark.data.ParkingManager;
 
 public class ParkingsList extends ListActivity implements
 		ActionBar.OnNavigationListener {
@@ -40,8 +44,7 @@ public class ParkingsList extends ListActivity implements
 
 		ActionBar actionBar = getActionBar();
 		setActionBar(actionBar);
-
-		createParkingsList();		
+		createParkingsList();
 
 		adpParkings = new ArrayAdapter<Parking>(this, R.layout.parking_row,
 				R.id.parking_name, arrParkings) {
@@ -60,8 +63,8 @@ public class ParkingsList extends ListActivity implements
 		};
 
 		setListAdapter(adpParkings);
-		
 		setCAB();
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
 
 	@Override
@@ -79,7 +82,8 @@ public class ParkingsList extends ListActivity implements
 		} else if (id == R.id.mnu_view_map) {
 
 		} else if (id == R.id.action_settings) {
-			Intent intent = new Intent(this, es.deusto.p1justpark.settings.MySettingsActivity.class);
+			Intent intent = new Intent(this,
+					es.deusto.p1justpark.settings.MySettingsActivity.class);
 			startActivityForResult(intent, settingsIntent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -141,7 +145,12 @@ public class ParkingsList extends ListActivity implements
 				mode.finish();
 				return true;
 			case R.id.parking_navigate:
-				// TODO Navigate to parking
+				// FIXME Navigate to parking
+				Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?q="
+								+ arrParkings.get(position).getLat() + ","
+								+ arrParkings.get(position).getLng()));
+				startActivity(intent);
 				mode.finish();
 				return true;
 			case R.id.parking_share:
@@ -174,15 +183,15 @@ public class ParkingsList extends ListActivity implements
 		if (arrParkings == null) {
 			arrParkings = new ArrayList<Parking>();
 			arrParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100"));
-			arrParkings.add(new Parking(2, "Parking Diputacion",
-					"Gran Via 19, Bilbao", "50"));
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839));
+			arrParkings.add(new Parking(2, "Parking El Corte Ingles",
+					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936));
 		}
 
 		if (arrFavoriteParkings == null) {
 			arrFavoriteParkings = new ArrayList<Parking>();
 			arrFavoriteParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100"));
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839));
 		}
 	}
 
@@ -251,5 +260,12 @@ public class ParkingsList extends ListActivity implements
 		}
 		return true;
 	}
-
+	
+	@Override
+	protected void onStop() {
+		super.onDestroy();
+		Log.i("Stop", "Saving data");
+		(new ParkingManager(getApplicationContext())).saveParkings(arrParkings);
+		(new ParkingManager(getApplicationContext())).saveFavoriteParkings(arrFavoriteParkings);
+	}
 }
