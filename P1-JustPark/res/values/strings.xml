@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">P1-JustPark</string>
+    <string name="app_name">JustPark</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="parking_share">Share</string>
+    <string name="parking_navigate">Navigate</string>
+    <string name="parking_favorite">Add to favorites</string>
+    <string name="parking_name">Name</string>
+    <string name="parking_places">Places</string>
+    <string name="parking_address">Address</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_interval">Notifications interval</string>
+    <string name="general_interval">General interval</string>
+    <string name="switch_of_notifications">Switch off notifications</string>
+    <string name="search_location">Search</string>
+    <string name="view_map">View parking in map</string>
 
 </resources>

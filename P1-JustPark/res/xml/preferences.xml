@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="first_category"
+        android:title="@string/notifications" >
+        <EditTextPreference
+            android:key="notificacions_interval"
+            android:title="@string/notifications_interval"/>
+        <EditTextPreference
+            android:key="general_interval"
+            android:title="@string/general_interval"/>
+        <CheckBoxPreference
+            android:key="switch_off_notifications"
+            android:title="@string/switch_of_notifications" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
