@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="es.deusto.p1justpark.faces.ParkingsList"
+            android:name="es.deusto.p1justpark.ui.ParkingsActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="es.deusto.p1justpark.faces.ParkingView"
+            android:name="es.deusto.p1justpark.ui.ParkingView"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="es.deusto.p1justpark.settings.MySettingsActivity"
+            android:name="es.deusto.p1justpark.settings.SettingsActivity"
             android:label="@string/app_name" >
         </activity>
 

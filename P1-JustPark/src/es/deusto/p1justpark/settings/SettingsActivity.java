@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import es.deusto.p1justpark.R;
 
-public class MySettingsActivity extends Activity {
+public class SettingsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_settings);
 
 		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new MySettingsFragment())
+				.replace(android.R.id.content, new SettingsFragment())
 				.commit();
 	}
 
