@@ -1,12 +1,12 @@
-package es.deusto.p1justpark.faces;
+package es.deusto.p1justpark.ui;
+
+import java.io.Serializable;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import es.deusto.p1justpark.R;
@@ -16,7 +16,7 @@ public class ParkingView extends Activity {
 
 	private Parking parking;
 
-	private static final int settingsIntent = 1;
+	public static final String PARKING_KEY = "PARKING_KEY";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,35 +28,19 @@ public class ParkingView extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			parking = (Parking) extras.getSerializable("parking");
+			parking = (Parking) extras.getSerializable(ParkingView.PARKING_KEY);
 			setParking(parking);
 		}
 
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.parking_view, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			Intent intent = new Intent(this,
-					es.deusto.p1justpark.settings.MySettingsActivity.class);
-			startActivityForResult(intent, settingsIntent);
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public void onBackPressed() {
+		// FIXME Remove and save to BD
 		Parking newParking = getParking();
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("parking", newParking);
+		resultIntent.putExtra(ParkingView.PARKING_KEY,
+				(Serializable) newParking);
 		setResult(RESULT_OK, resultIntent);
 		finish();
 	}
@@ -78,7 +62,7 @@ public class ParkingView extends Activity {
 		ed3.setTypeface(null, Typeface.BOLD);
 		cb.setChecked(parking.isNotifications());
 	}
-	
+
 	private Parking getParking() {
 		CheckBox notification = (CheckBox) findViewById(R.id.cb_notification);
 		parking.setNotifications(notification.isChecked());

@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import es.deusto.p1justpark.R;
 
-public class MySettingsFragment extends PreferenceFragment implements
+public class SettingsFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
 	@Override

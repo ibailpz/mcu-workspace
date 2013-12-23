@@ -2,10 +2,13 @@ package es.deusto.p1justpark.data;
 
 import java.io.Serializable;
 
-public class Parking implements Serializable{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Parking implements Serializable, Parcelable {
 
 	private static final long serialVersionUID = -7200823720806189295L;
-	
+
 	private int id;
 	private String name;
 	private String address;
@@ -24,6 +27,16 @@ public class Parking implements Serializable{
 		this.lat = lat;
 		this.lng = lng;
 		this.notifications = notificacions;
+	}
+
+	public Parking(Parcel in) {
+		id = in.readInt();
+		name = in.readString();
+		address = in.readString();
+		places = in.readString();
+		lat = in.readDouble();
+		lng = in.readDouble();
+		notifications = ((in.readInt() == 0) ? false : true);
 	}
 
 	public int getId() {
@@ -81,6 +94,31 @@ public class Parking implements Serializable{
 	public void setNotifications(boolean notifications) {
 		this.notifications = notifications;
 	}
-	
-	
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(name);
+		dest.writeString(address);
+		dest.writeString(places);
+		dest.writeDouble(lat);
+		dest.writeDouble(lng);
+		dest.writeInt(notifications ? 1 : 0);
+	}
+
+	public static final Parcelable.Creator<Parking> CREATOR = new Parcelable.Creator<Parking>() {
+		public Parking createFromParcel(Parcel in) {
+			return new Parking(in);
+		}
+
+		public Parking[] newArray(int size) {
+			return new Parking[size];
+		}
+	};
+
 }
