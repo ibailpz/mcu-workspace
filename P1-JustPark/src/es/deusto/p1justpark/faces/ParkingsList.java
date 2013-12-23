@@ -206,6 +206,9 @@ public class ParkingsList extends ListActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(getListView().getCheckedItemPosition() > -1) {
+			getListView().setItemChecked(getListView().getCheckedItemPosition(), false);
+		}
 		if (requestCode == viewParking) {
 			if (resultCode == Activity.RESULT_OK) {
 				Parking parking = (Parking) data.getExtras().getSerializable(
@@ -213,7 +216,6 @@ public class ParkingsList extends ListActivity implements
 				updateParking(parking);
 			}
 		}
-
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

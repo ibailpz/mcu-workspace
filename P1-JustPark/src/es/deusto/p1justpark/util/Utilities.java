@@ -14,7 +14,7 @@ import es.deusto.p1justpark.data.Parking;
 
 public class Utilities {
 
-	private static final String PARKINGS_JSON = "json.internetdelascosas.es/arduino/getlast.php";
+	private static final String URL = "json.internetdelascosas.es/arduino/getlast.php";
 	private static final String PARKING_ID = "?device_id=";
 	private static final String DATA_NAME = "&data_name=";
 	private static final String NUM_ITEMS = "&nitems";
@@ -27,7 +27,7 @@ public class Utilities {
 			// TODO Get and parse JSON
 			StringBuilder jsonResults = new StringBuilder();
 			try {
-				StringBuilder sb = new StringBuilder(PARKINGS_JSON);
+				StringBuilder sb = new StringBuilder(URL);
 				sb.append(PARKING_ID + i);
 				sb.append(DATA_NAME + "parking");
 				sb.append(NUM_ITEMS + 1);
@@ -66,5 +66,8 @@ public class Utilities {
 		}
 		return parkings;
 	}
-
+	
+	public void getLocation() {
+		//TODO Get user location
+	}
 }
