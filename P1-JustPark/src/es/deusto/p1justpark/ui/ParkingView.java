@@ -1,16 +1,14 @@
 package es.deusto.p1justpark.ui;
 
-import java.io.Serializable;
-
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
+import es.deusto.p1justpark.db.ParkingsDatasource;
 
 public class ParkingView extends Activity {
 
@@ -28,7 +26,9 @@ public class ParkingView extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			parking = (Parking) extras.getSerializable(ParkingView.PARKING_KEY);
+			// parking = (Parking)
+			// extras.getSerializable(ParkingView.PARKING_KEY);
+			parking = (Parking) extras.getParcelable(ParkingView.PARKING_KEY);
 			setParking(parking);
 		}
 
@@ -36,13 +36,14 @@ public class ParkingView extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		// FIXME Remove and save to BD
-		Parking newParking = getParking();
-		Intent resultIntent = new Intent();
-		resultIntent.putExtra(ParkingView.PARKING_KEY,
-				(Serializable) newParking);
-		setResult(RESULT_OK, resultIntent);
-		finish();
+		// FIXM Remove and save to BD
+		updateParking();
+		// Intent resultIntent = new Intent();
+		// resultIntent.putExtra(ParkingView.PARKING_KEY,
+		// (Serializable) newParking);
+		// setResult(RESULT_OK, resultIntent);
+		// finish();
+		super.onBackPressed();
 	}
 
 	private void setParking(Parking parking) {
@@ -63,9 +64,9 @@ public class ParkingView extends Activity {
 		cb.setChecked(parking.isNotifications());
 	}
 
-	private Parking getParking() {
+	private void updateParking() {
 		CheckBox notification = (CheckBox) findViewById(R.id.cb_notification);
 		parking.setNotifications(notification.isChecked());
-		return parking;
+		ParkingsDatasource.getInstance().updateParking(parking);
 	}
 }

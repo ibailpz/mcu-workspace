@@ -21,7 +21,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
 			ArrayList<Parking> favoriteParkings = new ArrayList<Parking>();
 			favoriteParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false));
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false, true));
 
 			RemoteViews views = new RemoteViews(context.getPackageName(),
 					R.layout.widget_layout);
