@@ -49,27 +49,28 @@ public class ParkingsActivity extends Activity implements
 			intent.putExtra(
 					Intent.EXTRA_TEXT,
 					currentAdapter.getItem(
-							((ListView) findViewById(R.id.parkingList))
+							((ListView) findViewById(android.R.id.list))
 									.getCheckedItemPosition()).getName()
 							+ " "
-							+ currentAdapter.getItem(
-									((ListView) findViewById(R.id.parkingList))
-											.getCheckedItemPosition())
+							+ currentAdapter
+									.getItem(
+											((ListView) findViewById(android.R.id.list))
+													.getCheckedItemPosition())
 									.getPlaces());
 			shareProv.setShareIntent(intent);
 
-			((ListView) findViewById(R.id.parkingList)).setEnabled(false);
+			((ListView) findViewById(android.R.id.list)).setEnabled(false);
 			return true;
 		}
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			if (((ListView) findViewById(R.id.parkingList))
+			if (((ListView) findViewById(android.R.id.list))
 					.getCheckedItemPosition() >= 0)
-				((ListView) findViewById(R.id.parkingList)).setItemChecked(
-						((ListView) findViewById(R.id.parkingList))
+				((ListView) findViewById(android.R.id.list)).setItemChecked(
+						((ListView) findViewById(android.R.id.list))
 								.getCheckedItemPosition(), false);
-			((ListView) findViewById(R.id.parkingList)).setEnabled(true);
+			((ListView) findViewById(android.R.id.list)).setEnabled(true);
 			mActionMode = null;
 		}
 
@@ -82,7 +83,7 @@ public class ParkingsActivity extends Activity implements
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			final int position = ((ListView) findViewById(R.id.parkingList))
+			final int position = ((ListView) findViewById(android.R.id.list))
 					.getCheckedItemPosition();
 
 			switch (item.getItemId()) {
@@ -194,27 +195,30 @@ public class ParkingsActivity extends Activity implements
 		return true;
 	}
 
-	private void setCAB(final ListView list) {
-		list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+	private void setCAB() {
+		((ListView) findViewById(android.R.id.list))
+				.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		((ListView) findViewById(android.R.id.list))
+				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (mActionMode != null) {
-					return false;
-				}
-				list.setItemChecked(position, true);
-				mActionMode = ParkingsActivity.this
-						.startActionMode(mActionModeCallback);
-				return true;
-			}
-		});
+					public boolean onItemLongClick(AdapterView<?> parent,
+							View view, int position, long id) {
+						if (mActionMode != null) {
+							return false;
+						}
+						((ListView) findViewById(android.R.id.list))
+								.setItemChecked(position, true);
+						mActionMode = ParkingsActivity.this
+								.startActionMode(mActionModeCallback);
+						return true;
+					}
+				});
 	}
 
 	@Override
-	public void onAdapterChanged(ArrayAdapter<Parking> adapter, ListView list) {
+	public void onAdapterChanged(ArrayAdapter<Parking> adapter) {
 		currentAdapter = adapter;
-		setCAB(list);
+		setCAB();
 	}
 
 	@Override

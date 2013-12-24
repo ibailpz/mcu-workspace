@@ -58,7 +58,7 @@ public class ParkingsFragment extends ListFragment {
 			}
 		};
 		setListAdapter(adpParkings);
-		observer.onAdapterChanged(adpParkings, getListView());
+		observer.onAdapterChanged(adpParkings);
 	}
 
 	@Override
