@@ -5,7 +5,7 @@
         android:id="@+id/parking_favorite"
         android:icon="@drawable/ic_action_favorite"
         android:showAsAction="ifRoom"
-        android:title="@string/parking_favorite"/>
+        android:title="@string/parking_remove_favorite"/>
     <item
         android:id="@+id/parking_navigate"
         android:icon="@drawable/ic_action_send_now"

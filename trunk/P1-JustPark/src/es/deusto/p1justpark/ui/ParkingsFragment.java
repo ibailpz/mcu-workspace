@@ -1,6 +1,5 @@
 package es.deusto.p1justpark.ui;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -19,7 +18,6 @@ import es.deusto.p1justpark.data.Parking;
 public class ParkingsFragment extends ListFragment {
 
 	public static final String PARKINGS_ARRAY = "PARKINGS_ARRAY";
-	private static final int viewParking = 2;
 
 	private AdapterObserver observer;
 	private ArrayList<Parking> arrParkings;
@@ -73,8 +71,9 @@ public class ParkingsFragment extends ListFragment {
 	private void viewParking(int position) {
 		Parking parking = arrParkings.get(position);
 		Intent intent = new Intent(getActivity(), ParkingView.class);
-		intent.putExtra(ParkingView.PARKING_KEY, (Serializable) parking);
-		startActivityForResult(intent, viewParking);
+		intent.putExtra(ParkingView.PARKING_KEY, parking);
+		// startActivityForResult(intent, viewParking);
+		startActivity(intent);
 	}
 
 }

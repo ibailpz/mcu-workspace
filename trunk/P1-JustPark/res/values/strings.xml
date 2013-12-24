@@ -6,7 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="parking_share">Share</string>
     <string name="parking_navigate">Navigate</string>
-    <string name="parking_favorite">Add to favorites</string>
+    <string name="parking_add_favorite">Add to favorites</string>
+    <string name="parking_remove_favorite">Remove from favorites</string>
     <string name="parking_name">Name</string>
     <string name="parking_places">Places</string>
     <string name="parking_address">Address</string>
@@ -18,6 +19,8 @@
     <string name="search_location">Search</string>
     <string name="view_map">View parking in map</string>
     <string name="coords">Coords</string>
+    <string name="added_favourite">%1$s added to favourites</string>
+    <string name="remove_favourite">%1$s removed from favourites</string>
 
     <string-array name="notificacions_interval">
         <item>every 5 minutes</item>

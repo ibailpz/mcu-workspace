@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,12 +18,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+import android.widget.Toast;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
-import es.deusto.p1justpark.data.ParkingManager;
+import es.deusto.p1justpark.db.DatabaseObserver;
+import es.deusto.p1justpark.db.ParkingsDatasource;
 
 public class ParkingsActivity extends Activity implements
-		ActionBar.OnNavigationListener, AdapterObserver {
+		ActionBar.OnNavigationListener, AdapterObserver, DatabaseObserver {
 
 	private static final int settingsIntent = 1;
 	private static final String STATE_TYPE_LIST = "all_or_favorites";
@@ -78,6 +79,15 @@ public class ParkingsActivity extends Activity implements
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.parking_action, menu);
+			int position = ((ListView) findViewById(android.R.id.list))
+					.getCheckedItemPosition();
+			if (position >= 0
+					&& !currentAdapter.getItem(position).isFavourite()) {
+				menu.findItem(R.id.parking_favorite).setIcon(
+						R.drawable.ic_action_not_favorite);
+				menu.findItem(R.id.parking_favorite).setTitle(
+						R.string.parking_add_favorite);
+			}
 			return true;
 		}
 
@@ -88,7 +98,28 @@ public class ParkingsActivity extends Activity implements
 
 			switch (item.getItemId()) {
 			case R.id.parking_favorite:
-				// FIXME Change favourite state
+				// FIXM Change favourite state
+				Parking parking = currentAdapter.getItem(position);
+				if (parking.isFavourite()) {
+					parking.setFavourite(false);
+					Toast.makeText(
+							ParkingsActivity.this,
+							String.format(
+									getResources().getString(
+											R.string.remove_favourite),
+									parking.getName()), Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					parking.setFavourite(true);
+					Toast.makeText(
+							ParkingsActivity.this,
+							String.format(
+									getResources().getString(
+											R.string.added_favourite),
+									parking.getName()), Toast.LENGTH_SHORT)
+							.show();
+				}
+				ParkingsDatasource.getInstance().updateParking(parking);
 				mode.finish();
 				return true;
 			case R.id.parking_navigate:
@@ -112,7 +143,10 @@ public class ParkingsActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ParkingsDatasource.addDatabaseObserver(this);
+		ParkingsDatasource.initDatasource(this);
 		createParkingsList();
+		loadParkings();
 		setActionBar(getActionBar());
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
@@ -160,7 +194,7 @@ public class ParkingsActivity extends Activity implements
 		Bundle args = new Bundle();
 		switch (position) {
 		case 0:
-			// TODO Inflate adapter with arrParkings from BD
+			// TOD Inflate adapter with arrParkings from BD
 			if (list == null) {
 				list = new ParkingsFragment();
 				args.putParcelableArrayList(ParkingsFragment.PARKINGS_ARRAY,
@@ -173,7 +207,7 @@ public class ParkingsActivity extends Activity implements
 			fragment = list;
 			break;
 		case 1:
-			// TODO Inflate adapter with arrFavoriteParkings from BD
+			// TOD Inflate adapter with arrFavoriteParkings from BD
 			args.putParcelableArrayList(ParkingsFragment.PARKINGS_ARRAY,
 					arrFavoriteParkings);
 			if (favs == null) {
@@ -215,6 +249,20 @@ public class ParkingsActivity extends Activity implements
 				});
 	}
 
+	private void loadParkings() {
+		if (arrParkings == null) {
+			arrParkings = new ArrayList<Parking>();
+		}
+		arrParkings.clear();
+		arrParkings.addAll(ParkingsDatasource.getInstance().getAllParkings());
+		if (arrFavoriteParkings == null) {
+			arrFavoriteParkings = new ArrayList<Parking>();
+		}
+		arrFavoriteParkings.clear();
+		arrFavoriteParkings.addAll(ParkingsDatasource.getInstance()
+				.getFavouriteParkings());
+	}
+
 	@Override
 	public void onAdapterChanged(ArrayAdapter<Parking> adapter) {
 		currentAdapter = adapter;
@@ -222,12 +270,27 @@ public class ParkingsActivity extends Activity implements
 	}
 
 	@Override
+	public void onUpdate() {
+		loadParkings();
+		if (currentAdapter != null) {
+			currentAdapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
 	protected void onPause() {
+		super.onPause();
+		// Log.i("Pause", "Saving data");
+		// (new
+		// ParkingManager(getApplicationContext())).saveParkings(arrParkings);
+		// (new ParkingManager(getApplicationContext()))
+		// .saveFavoriteParkings(arrFavoriteParkings);
+	}
+
+	@Override
+	protected void onDestroy() {
 		super.onDestroy();
-		Log.i("Pause", "Saving data");
-		(new ParkingManager(getApplicationContext())).saveParkings(arrParkings);
-		(new ParkingManager(getApplicationContext()))
-				.saveFavoriteParkings(arrFavoriteParkings);
+		ParkingsDatasource.getInstance().close();
 	}
 
 	@Override
@@ -246,21 +309,18 @@ public class ParkingsActivity extends Activity implements
 				.getSelectedNavigationIndex());
 	}
 
-	// FIXME Remove, load from BD
 	private void createParkingsList() {
-		if (arrParkings == null) {
-			arrParkings = new ArrayList<Parking>();
-			arrParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false));
-			arrParkings.add(new Parking(2, "Parking El Corte Ingles",
-					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false));
-		}
-
-		if (arrFavoriteParkings == null) {
-			arrFavoriteParkings = new ArrayList<Parking>();
-			arrFavoriteParkings.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false));
+		if (ParkingsDatasource.getInstance().getAllParkings().isEmpty()) {
+			ArrayList<Parking> list = new ArrayList<Parking>();
+			list.add(new Parking(1, "Parking Plaza Euskadi",
+					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false,
+					false));
+			list.add(new Parking(2, "Parking El Corte Ingles",
+					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false,
+					true));
+			for (Parking p : list) {
+				ParkingsDatasource.getInstance().createParking(p);
+			}
 		}
 	}
-
 }

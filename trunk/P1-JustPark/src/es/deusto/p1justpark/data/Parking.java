@@ -1,13 +1,9 @@
 package es.deusto.p1justpark.data;
 
-import java.io.Serializable;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Parking implements Serializable, Parcelable {
-
-	private static final long serialVersionUID = -7200823720806189295L;
+public class Parking implements Parcelable {
 
 	private int id;
 	private String name;
@@ -16,9 +12,10 @@ public class Parking implements Serializable, Parcelable {
 	private double lat;
 	private double lng;
 	private boolean notifications;
+	private boolean favourite;
 
 	public Parking(int id, String name, String address, String places,
-			double lat, double lng, boolean notificacions) {
+			double lat, double lng, boolean notificacions, boolean favourite) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -27,6 +24,7 @@ public class Parking implements Serializable, Parcelable {
 		this.lat = lat;
 		this.lng = lng;
 		this.notifications = notificacions;
+		this.favourite = favourite;
 	}
 
 	public Parking(Parcel in) {
@@ -36,7 +34,11 @@ public class Parking implements Serializable, Parcelable {
 		places = in.readString();
 		lat = in.readDouble();
 		lng = in.readDouble();
-		notifications = ((in.readInt() == 0) ? false : true);
+		notifications = (in.readInt() != 0);
+		favourite = (in.readInt() != 0);
+	}
+
+	public Parking() {
 	}
 
 	public int getId() {
@@ -95,6 +97,14 @@ public class Parking implements Serializable, Parcelable {
 		this.notifications = notifications;
 	}
 
+	public boolean isFavourite() {
+		return favourite;
+	}
+
+	public void setFavourite(boolean favourite) {
+		this.favourite = favourite;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -109,6 +119,7 @@ public class Parking implements Serializable, Parcelable {
 		dest.writeDouble(lat);
 		dest.writeDouble(lng);
 		dest.writeInt(notifications ? 1 : 0);
+		dest.writeInt(favourite ? 1 : 0);
 	}
 
 	public static final Parcelable.Creator<Parking> CREATOR = new Parcelable.Creator<Parking>() {
