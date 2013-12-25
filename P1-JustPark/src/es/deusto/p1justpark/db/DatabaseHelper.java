@@ -16,6 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_LONG = "long";
 	public static final String COLUMN_NOTIFICATIONS = "notifications";
 	public static final String COLUMN_FAVOURITE = "favourite";
+	public static final String COLUMN_UPDATED = "last_updated";
 
 	private static final String DATABASE_NAME = "parkings.db";
 	private static final int DATABASE_VERSION = 1;
@@ -27,7 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ " text not null, " + COLUMN_PLACES + " text not null, "
 			+ COLUMN_LAT + " real not null, " + COLUMN_LONG
 			+ " real not null, " + COLUMN_NOTIFICATIONS + " integer not null, "
-			+ COLUMN_FAVOURITE + " integer not null);";
+			+ COLUMN_FAVOURITE + " integer not null, " + COLUMN_UPDATED
+			+ " integer not null);";
 
 	DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

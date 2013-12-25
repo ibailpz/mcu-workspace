@@ -1,6 +1,7 @@
 package es.deusto.p1justpark.db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import es.deusto.p1justpark.data.Parking;
 
 public class ParkingsDatasource {
@@ -21,27 +23,31 @@ public class ParkingsDatasource {
 	public static void removeDatabaseObserver(DatabaseObserver o) {
 		observers.remove(o);
 	}
-	
+
 	public static ParkingsDatasource instance;
 
 	private SQLiteDatabase database;
 	private DatabaseHelper dbHelper;
+	private Context context;
 	private String[] allColumns = { DatabaseHelper.COLUMN_ID,
 			DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_ADDRESS,
 			DatabaseHelper.COLUMN_PLACES, DatabaseHelper.COLUMN_LAT,
 			DatabaseHelper.COLUMN_LONG, DatabaseHelper.COLUMN_NOTIFICATIONS,
-			DatabaseHelper.COLUMN_FAVOURITE };
-	
+			DatabaseHelper.COLUMN_FAVOURITE, DatabaseHelper.COLUMN_UPDATED };
+
 	public static void initDatasource(Context ctx) {
 		instance = new ParkingsDatasource(ctx);
-		instance.open();
 	}
-	
+
 	public static ParkingsDatasource getInstance() {
+		if (instance != null && instance.database == null) {
+			instance.open();
+		}
 		return instance;
 	}
 
 	private ParkingsDatasource(Context context) {
+		this.context = context;
 		dbHelper = new DatabaseHelper(context);
 	}
 
@@ -51,6 +57,7 @@ public class ParkingsDatasource {
 
 	public void close() {
 		dbHelper.close();
+		database = null;
 	}
 
 	public boolean createParking(Parking parking) {
@@ -70,8 +77,10 @@ public class ParkingsDatasource {
 		values.put(DatabaseHelper.COLUMN_LONG, parking.getLng());
 		values.put(DatabaseHelper.COLUMN_NOTIFICATIONS,
 				parking.isNotifications() ? 1 : 0);
-		values.put(DatabaseHelper.COLUMN_FAVOURITE,
-				parking.isFavourite() ? 1 : 0);
+		values.put(DatabaseHelper.COLUMN_FAVOURITE, parking.isFavourite() ? 1
+				: 0);
+		values.put(DatabaseHelper.COLUMN_UPDATED, parking.getLastUpdatedTime()
+				.getTime());
 		return values;
 	}
 
@@ -106,16 +115,56 @@ public class ParkingsDatasource {
 		return parkings;
 	}
 
-	public void updateParking(Parking p) {
+	public Parking getParking(int id) {
+		Cursor cursor = database.query(DatabaseHelper.TABLE_PARKINGS,
+				allColumns, DatabaseHelper.COLUMN_ID + " = " + id, null, null,
+				null, null);
+		cursor.moveToFirst();
+		Parking p = cursorToParking(cursor);
+		cursor.close();
+		return p;
+	}
+
+	public void updateParkingSettings(Parking p) {
+		updateParking(p, true);
+	}
+
+	private void updateParking(Parking p, boolean notify) {
 		ContentValues values = getContentValues(p);
 		database.update(DatabaseHelper.TABLE_PARKINGS, values,
 				DatabaseHelper.COLUMN_ID + " = " + p.getId(), null);
-		notifyObservers();
+		if (notify) {
+			ArrayList<Parking> al = new ArrayList<Parking>(1);
+			al.add(p);
+			notifyObservers(al);
+		}
 	}
 
-	private void notifyObservers() {
+	public void updateAllParkings(List<Parking> parkings) {
+		ArrayList<Parking> updated = new ArrayList<Parking>();
+		Date now = new Date();
+		for (Parking p : parkings) {
+			Parking orig = getParking(p.getId());
+			if (!orig.getPlaces().equals(p.getPlaces())) {
+				updated.add(p);
+			}
+			p.setLastUpdatedTime(now);
+			updateParking(p, false);
+		}
+		notifyObservers(updated);
+	}
+
+	private void notifyObservers(List<Parking> updated) {
 		for (DatabaseObserver d : observers) {
 			d.onUpdate();
+		}
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+				"switch_notifications", false)) {
+			for (Parking p : updated) {
+				if (p.isNotifications()) {
+					// TODO Notification
+				}
+			}
 		}
 	}
 
@@ -129,6 +178,7 @@ public class ParkingsDatasource {
 		parking.setLng(cursor.getDouble(5));
 		parking.setNotifications(cursor.getInt(6) != 0);
 		parking.setFavourite(cursor.getInt(7) != 0);
+		parking.setLastUpdatedTime(new Date(cursor.getLong(8)));
 		return parking;
 	}
 }

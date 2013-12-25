@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
 
 public class ParkingsFragment extends ListFragment {
@@ -39,22 +37,7 @@ public class ParkingsFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		adpParkings = new ArrayAdapter<Parking>(getActivity(),
-				R.layout.parking_row, R.id.parking_name, arrParkings) {
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				View view = super.getView(position, convertView, parent);
-				TextView text1 = (TextView) view
-						.findViewById(R.id.parking_name);
-				TextView text2 = (TextView) view
-						.findViewById(R.id.parking_places);
-				text1.setText(adpParkings.getItem(position).getName());
-				text2.setText(adpParkings.getItem(position).getPlaces());
-				return view;
-			}
-		};
+		adpParkings = new ParkingsAdapter(getActivity(), arrParkings);
 		setListAdapter(adpParkings);
 		observer.onAdapterChanged(adpParkings);
 	}

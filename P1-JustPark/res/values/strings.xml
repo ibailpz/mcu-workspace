@@ -11,26 +11,35 @@
     <string name="parking_name">Name</string>
     <string name="parking_places">Places</string>
     <string name="parking_address">Address</string>
-    <string name="notification">Notification</string>
+    <string name="receive_notifications">Receive notifications when the number of places change</string>
     <string name="notifications">Notifications</string>
     <string name="notifications_interval">Notifications interval</string>
-    <string name="general_interval">General interval</string>
-    <string name="switch_of_notifications">Switch off notifications</string>
+    <string name="general_interval">Parking status update interval</string>
+    <string name="switch_notifications">Enable notifications</string>
     <string name="search_location">Search</string>
     <string name="view_map">View parking in map</string>
     <string name="coords">Coords</string>
     <string name="added_favourite">%1$s added to favourites</string>
     <string name="remove_favourite">%1$s removed from favourites</string>
+    <string name="free_places">Free places</string>
+    <string name="location">Location</string>
+    <string name="last_updated_note">(last updated %1$s)</string>
 
     <string-array name="notificacions_interval">
-        <item>every 5 minutes</item>
-        <item>every 10 minutes</item>
-        <item>every 15 minutes</item>
+        <item>Every 5 minutes</item>
+        <item>Every 10 minutes</item>
+        <item>Every 15 minutes</item>
     </string-array>
     <string-array name="general_interval">
-        <item>every 5 minutes</item>
-        <item>every 10 minutes</item>
-        <item>every 15 minutes</item>
+        <item>Every 5 minutes</item>
+        <item>Every 10 minutes</item>
+        <item>Every 15 minutes</item>
+    </string-array>
+    
+    <string-array name="order">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
 </resources>

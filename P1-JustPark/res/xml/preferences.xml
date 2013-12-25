@@ -5,20 +5,23 @@
         android:key="first_category"
         android:title="@string/notifications" >
         <ListPreference
-            android:key="notificacions_interval"
-            android:title="@string/notifications_interval"
-            android:entries="@array/notificacions_interval"
-            android:entryValues="@array/notificacions_interval"
-            android:defaultValue="every 5 minutes"/>
-        <ListPreference
-            android:key="general_interval"
-            android:title="@string/general_interval"
+            android:defaultValue="2"
             android:entries="@array/general_interval"
-            android:entryValues="@array/general_interval"
-            android:defaultValue="every 15 minutes"/>
-        <CheckBoxPreference
-            android:key="switch_off_notifications"
-            android:title="@string/switch_of_notifications" />
+            android:entryValues="@array/order"
+            android:key="general_interval"
+            android:title="@string/general_interval" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_notifications"
+            android:title="@string/switch_notifications" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/notificacions_interval"
+            android:entryValues="@array/order"
+            android:key="notificacions_interval"
+            android:title="@string/notifications_interval" />
     </PreferenceCategory>
 
 </PreferenceScreen>
