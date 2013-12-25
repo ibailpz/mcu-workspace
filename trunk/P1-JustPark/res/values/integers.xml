@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="notificacions_times">
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+    </integer-array>
+    <integer-array name="general_times">
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+    </integer-array>
+
+</resources>

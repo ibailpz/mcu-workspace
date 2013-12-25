@@ -1,6 +1,7 @@
 package es.deusto.p1justpark.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -23,6 +24,7 @@ import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.db.DatabaseObserver;
 import es.deusto.p1justpark.db.ParkingsDatasource;
+import es.deusto.p1justpark.services.ParkingUpdateService;
 
 public class ParkingsActivity extends Activity implements
 		ActionBar.OnNavigationListener, AdapterObserver, DatabaseObserver {
@@ -119,7 +121,7 @@ public class ParkingsActivity extends Activity implements
 									parking.getName()), Toast.LENGTH_SHORT)
 							.show();
 				}
-				ParkingsDatasource.getInstance().updateParking(parking);
+				ParkingsDatasource.getInstance().updateParkingSettings(parking);
 				mode.finish();
 				return true;
 			case R.id.parking_navigate:
@@ -145,6 +147,7 @@ public class ParkingsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		ParkingsDatasource.addDatabaseObserver(this);
 		ParkingsDatasource.initDatasource(this);
+		startService(new Intent(this, ParkingUpdateService.class));
 		createParkingsList();
 		loadParkings();
 		setActionBar(getActionBar());
@@ -273,7 +276,13 @@ public class ParkingsActivity extends Activity implements
 	public void onUpdate() {
 		loadParkings();
 		if (currentAdapter != null) {
-			currentAdapter.notifyDataSetChanged();
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					currentAdapter.notifyDataSetChanged();
+				}
+			});
 		}
 	}
 
@@ -314,10 +323,10 @@ public class ParkingsActivity extends Activity implements
 			ArrayList<Parking> list = new ArrayList<Parking>();
 			list.add(new Parking(1, "Parking Plaza Euskadi",
 					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false,
-					false));
+					false, new Date()));
 			list.add(new Parking(2, "Parking El Corte Ingles",
 					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false,
-					true));
+					true, new Date()));
 			for (Parking p : list) {
 				ParkingsDatasource.getInstance().createParking(p);
 			}

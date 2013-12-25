@@ -1,5 +1,7 @@
 package es.deusto.p1justpark.data;
 
+import java.util.Date;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,9 +15,11 @@ public class Parking implements Parcelable {
 	private double lng;
 	private boolean notifications;
 	private boolean favourite;
+	private Date lastUpdatedTime;
 
 	public Parking(int id, String name, String address, String places,
-			double lat, double lng, boolean notificacions, boolean favourite) {
+			double lat, double lng, boolean notificacions, boolean favourite,
+			Date lastUpdatedTime) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -25,6 +29,7 @@ public class Parking implements Parcelable {
 		this.lng = lng;
 		this.notifications = notificacions;
 		this.favourite = favourite;
+		this.lastUpdatedTime = lastUpdatedTime;
 	}
 
 	public Parking(Parcel in) {
@@ -36,6 +41,7 @@ public class Parking implements Parcelable {
 		lng = in.readDouble();
 		notifications = (in.readInt() != 0);
 		favourite = (in.readInt() != 0);
+		lastUpdatedTime = new Date(in.readLong());
 	}
 
 	public Parking() {
@@ -105,6 +111,14 @@ public class Parking implements Parcelable {
 		this.favourite = favourite;
 	}
 
+	public Date getLastUpdatedTime() {
+		return lastUpdatedTime;
+	}
+
+	public void setLastUpdatedTime(Date lastUpdatedTime) {
+		this.lastUpdatedTime = lastUpdatedTime;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -120,6 +134,7 @@ public class Parking implements Parcelable {
 		dest.writeDouble(lng);
 		dest.writeInt(notifications ? 1 : 0);
 		dest.writeInt(favourite ? 1 : 0);
+		dest.writeLong(lastUpdatedTime.getTime());
 	}
 
 	public static final Parcelable.Creator<Parking> CREATOR = new Parcelable.Creator<Parking>() {
