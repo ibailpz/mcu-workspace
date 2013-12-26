@@ -15,12 +15,18 @@ const int kNetworkDelay = 1000;
 
 int places;
 Servo servo;
+int buttonState = 0;
+int motionState = 0;
+int inout = -1;
 
-int sensor = A0;
-int inputButton = A1;
-int led = A2;
-int motionDetect = A3;
+int inputButtonIn = A1;
+int inputButtonOut = A2;
+int led = A3;
+int motionDetect = A5;
+
+int sleepPin = 2;
 int speakerPin = 6;
+int servoPin = 9;
 
 int length = 15; // the number of notes
 char notes[] = "cc "; // a space represents a rest
@@ -30,6 +36,17 @@ int tempo = 300;
 void setup(){
   Serial.begin(9600);
   readEEPROM();
+  servo.attach(servoPin);
+  digitalWrite(sleepPin, HIGH);
+  
+  pinMode(inputButtonIn, INPUT);
+  pinMode(inputButtonOut, INPUT);
+  pinMode(motionDetect, INPUT);
+  
+  pinMode(led, OUTPUT);
+  pinMode(sleepPin, OUTPUT);
+  pinMode(servoPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
   
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -40,17 +57,34 @@ void setup(){
 }
 
 void loop(){
+  inout = -1;
+  
   if(places<1){
     Serial.println("No places");
     while(places<1){
     }    
   }
   
-  detectCar();
-  sound();
-    
-  moveServo();  
-  places = places - 1;
+  while(inout == -1){
+    Serial.println("Waiting...");    
+    inout = detectCar(); 
+    if(inout == -1)
+      inout = buttonOut();
+  }
+  
+  if(inout == 0){
+    //sound();
+    buttonIn();    
+    moveServo();  
+    places = places - 1;
+  }else{    
+    Serial.println("Led");
+    digitalWrite(led, HIGH);
+    delay(3000);
+    digitalWrite(led, LOW);    
+    places = places + 1;
+  }  
+  
   writeEEPROM(places);
   
   if( WiFi.status() != WL_CONNECTED){
@@ -67,9 +101,16 @@ void readEEPROM(){
   Serial.println(places);  
 }
 
-void detectCar(){
-  while(motionDetect == 1){
-  }  
+int detectCar(){  
+  Serial.println("Detect car");
+  //do{    
+    motionState = digitalRead(motionDetect);
+  //}while(motionState == HIGH);
+  
+  if(motionState == HIGH) 
+    return -1;
+  else
+    return 0;
 }
 
 void writeEEPROM(int p){
@@ -220,7 +261,28 @@ void playNote(char note, int duration) {
 }
 
 void moveServo(){
-  servo.write(179);
-  delay(10);
+  Serial.println("Move");
+  servo.write(90);
+  delay(2000);
   servo.write(0);
+}
+
+int buttonOut(){
+  Serial.println("Button Out");
+  int i = 0;
+  do{
+    buttonState = digitalRead(inputButtonOut); 
+    i++;   
+  }while(buttonState == HIGH && i<10);
+  if(buttonState == HIGH)
+    return -1;
+  else
+    return 1;
+}
+
+void buttonIn(){  
+  Serial.println("Button In");
+  do{
+  buttonState = digitalRead(inputButtonIn); 
+  }while(buttonState == HIGH);
 }
