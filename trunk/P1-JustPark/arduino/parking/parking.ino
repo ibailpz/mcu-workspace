@@ -22,6 +22,7 @@ int inout = -1;
 int inputButtonIn = A1;
 int inputButtonOut = A2;
 int led = A3;
+int ledNot = A4;
 int motionDetect = A5;
 
 int sleepPin = 2;
@@ -59,15 +60,15 @@ void setup(){
 void loop(){
   inout = -1;
   
-  if(places<1){
-    Serial.println("No places");
-    while(places<1){
-    }    
-  }
+  if(places<1)
+    digitalWrite(ledNot, HIGH);  
+  else  
+    digitalWrite(ledNot, LOW);
   
   while(inout == -1){
-    Serial.println("Waiting...");    
-    inout = detectCar(); 
+    Serial.println("Waiting..."); 
+    if(places > 0)
+      inout = detectCar();
     if(inout == -1)
       inout = buttonOut();
   }
