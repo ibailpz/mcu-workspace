@@ -7,11 +7,6 @@
         android:showAsAction="always"
         android:title="@string/search_location"/>
     <item
-        android:id="@+id/mnu_view_map"
-        android:icon="@drawable/ic_action_map"
-        android:showAsAction="always"
-        android:title="@string/view_map"/>
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

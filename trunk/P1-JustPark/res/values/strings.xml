@@ -26,11 +26,6 @@
     <string name="last_updated_note">(last updated %1$s)</string>
     <string name="parking_location">Parking location</string>
 
-    <string-array name="notificacions_interval">
-        <item>Every 5 minutes</item>
-        <item>Every 10 minutes</item>
-        <item>Every 15 minutes</item>
-    </string-array>
     <string-array name="general_interval">
         <item>Every 5 minutes</item>
         <item>Every 10 minutes</item>
