@@ -9,6 +9,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +20,17 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
+
 import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.db.ParkingsDatasource;
 import es.deusto.p1justpark.widget.WidgetProvider;
@@ -93,8 +104,59 @@ public final class Utilities {
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 		ctx.sendBroadcast(intent);
 	}
+	
+	// Location
 
-	public static void getLocation() {
-		// TODO Get user location
+	private static LocationClient mLocationClient;
+	private static Semaphore blocker = new Semaphore(0);
+	private static GooglePlayServicesClient.ConnectionCallbacks callback = new ConnectionCallbacks() {
+
+		@Override
+		public void onConnected(Bundle arg0) {
+			Log.i("Location client", "Connected");
+			blocker.release(Integer.MAX_VALUE);
+		}
+
+		@Override
+		public void onDisconnected() {
+			Log.i("Location client", "Disconnected");
+			blocker.release(Integer.MAX_VALUE);
+			blocker = new Semaphore(0);
+		}
+	};
+
+	private static GooglePlayServicesClient.OnConnectionFailedListener onFailed = new OnConnectionFailedListener() {
+
+		@Override
+		public void onConnectionFailed(ConnectionResult arg0) {
+			Log.i("Location client", "Connection failed");
+			blocker.release();
+		}
+	};
+
+	public static synchronized Location getLocation(Context ctx) {
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx) != ConnectionResult.SUCCESS) {
+			Log.i("Location client", "No Google play services");
+			return null;
+		}
+
+		if (mLocationClient == null || !mLocationClient.isConnected()) {
+			mLocationClient = new LocationClient(ctx, callback, onFailed);
+			mLocationClient.connect();
+		}
+
+		try {
+			blocker.acquire();
+		} catch (InterruptedException e) {
+			Log.w("Location client", e.getMessage(), e);
+			return null;
+		}
+
+		if (!mLocationClient.isConnected()) {
+			Log.i("Location client", "Error connecting to server");
+			return null;
+		}
+
+		return mLocationClient.getLastLocation();
 	}
 }
