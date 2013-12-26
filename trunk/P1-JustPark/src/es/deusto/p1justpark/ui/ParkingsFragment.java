@@ -2,6 +2,11 @@ package es.deusto.p1justpark.ui;
 
 import java.util.ArrayList;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -12,14 +17,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import es.deusto.p1justpark.data.Parking;
+import es.deusto.p1justpark.db.DatabaseObserver;
+import es.deusto.p1justpark.db.ParkingsDatasource;
+import es.deusto.p1justpark.services.ParkingUpdateService;
 
-public class ParkingsFragment extends ListFragment {
+public class ParkingsFragment extends ListFragment implements
+		OnRefreshListener, DatabaseObserver {
 
 	public static final String PARKINGS_ARRAY = "PARKINGS_ARRAY";
 
+	private PullToRefreshLayout mPullToRefreshLayout;
+	private ViewGroup viewGroup;
+	private Runnable hide = new Runnable() {
+
+		@Override
+		public void run() {
+			transformer.hideHeaderView();
+			setupPull();
+		}
+	};
+	
 	private AdapterObserver observer;
 	private ArrayList<Parking> arrParkings;
 	private ArrayAdapter<Parking> adpParkings;
+	private DefaultHeaderTransformer transformer = new DefaultHeaderTransformer();
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -32,6 +53,27 @@ public class ParkingsFragment extends ListFragment {
 			Bundle savedInstanceState) {
 		arrParkings = getArguments().getParcelableArrayList(PARKINGS_ARRAY);
 		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		ParkingsDatasource.addDatabaseObserver(this);
+		viewGroup = (ViewGroup) view;
+		setupPull();
+	}
+
+	private void setupPull() {
+		mPullToRefreshLayout = new PullToRefreshLayout(getActivity());
+		ActionBarPullToRefresh
+				.from(getActivity())
+				.insertLayoutInto(viewGroup)
+				.theseChildrenArePullable(getListView(),
+						getListView().getEmptyView())
+				.options(
+						Options.create().headerTransformer(transformer).build())
+				.listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -55,8 +97,18 @@ public class ParkingsFragment extends ListFragment {
 		Parking parking = arrParkings.get(position);
 		Intent intent = new Intent(getActivity(), ParkingView.class);
 		intent.putExtra(ParkingView.PARKING_KEY, parking);
-		// startActivityForResult(intent, viewParking);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		getActivity().startService(
+				new Intent(getActivity(), ParkingUpdateService.class));
+	}
+
+	@Override
+	public void onUpdate() {
+		getActivity().runOnUiThread(hide);
 	}
 
 }
