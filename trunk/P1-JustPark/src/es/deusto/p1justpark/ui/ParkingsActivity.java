@@ -166,8 +166,6 @@ public class ParkingsActivity extends Activity implements
 		int id = item.getItemId();
 		if (id == R.id.mnu_search_location) {
 
-		} else if (id == R.id.mnu_view_map) {
-
 		} else if (id == R.id.action_settings) {
 			Intent intent = new Intent(this,
 					es.deusto.p1justpark.settings.SettingsActivity.class);
@@ -321,10 +319,10 @@ public class ParkingsActivity extends Activity implements
 	private void createParkingsList() {
 		if (ParkingsDatasource.getInstance().getAllParkings().isEmpty()) {
 			ArrayList<Parking> list = new ArrayList<Parking>();
-			list.add(new Parking(1, "Parking Plaza Euskadi",
-					"Plaza Euskadi Bilbao", "100", 43.26723, -2.93839, false,
+			list.add(new Parking(200, "Parking Plaza Euskadi",
+					"Plaza Euskadi, Bilbao", "100", 43.26723, -2.93839, false,
 					false, new Date()));
-			list.add(new Parking(2, "Parking El Corte Ingles",
+			list.add(new Parking(201, "Parking El Corte Ingles",
 					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false,
 					true, new Date()));
 			for (Parking p : list) {

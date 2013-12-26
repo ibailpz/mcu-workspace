@@ -49,7 +49,7 @@ public final class Utilities {
 			jsonResults = new StringBuilder();
 			try {
 				StringBuilder sb = new StringBuilder(URL);
-				sb.append(PARKING_ID).append(i);
+				sb.append(PARKING_ID).append(parkings.get(i).getId());
 				sb.append(DATA_NAME);
 				sb.append(NUM_ITEMS);
 
