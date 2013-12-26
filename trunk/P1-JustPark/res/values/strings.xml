@@ -24,6 +24,7 @@
     <string name="free_places">Free places</string>
     <string name="location">Location</string>
     <string name="last_updated_note">(last updated %1$s)</string>
+    <string name="parking_location">Parking location</string>
 
     <string-array name="notificacions_interval">
         <item>Every 5 minutes</item>

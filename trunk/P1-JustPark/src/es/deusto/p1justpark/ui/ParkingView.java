@@ -4,9 +4,14 @@ import java.text.SimpleDateFormat;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
@@ -47,6 +52,7 @@ public class ParkingView extends Activity {
 		TextView ed4 = (TextView) findViewById(R.id.parking_address);
 		TextView ed5 = (TextView) findViewById(R.id.coords);
 		CheckBox cb = (CheckBox) findViewById(R.id.cb_notification);
+		ImageView iv = (ImageView) findViewById(R.id.map);
 
 		ed1.setText(parking.getName());
 		// ed1.setTypeface(null, Typeface.BOLD);
@@ -66,6 +72,17 @@ public class ParkingView extends Activity {
 				"switch_notifications", false)) {
 			cb.setEnabled(false);
 		}
+		iv.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?q="
+								+ ParkingView.this.parking.getLat() + ","
+								+ ParkingView.this.parking.getLng()));
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void updateParking() {
