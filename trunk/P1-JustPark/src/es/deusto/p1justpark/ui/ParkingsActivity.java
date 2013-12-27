@@ -2,12 +2,15 @@ package es.deusto.p1justpark.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ActionMode;
@@ -25,6 +28,7 @@ import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.db.DatabaseObserver;
 import es.deusto.p1justpark.db.ParkingsDatasource;
 import es.deusto.p1justpark.services.ParkingUpdateService;
+import es.deusto.p1justpark.util.Utilities;
 
 public class ParkingsActivity extends Activity implements
 		ActionBar.OnNavigationListener, AdapterObserver, DatabaseObserver {
@@ -164,8 +168,55 @@ public class ParkingsActivity extends Activity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.mnu_search_location) {
+		if (id == R.id.mnu_search_closest) {
+			new AsyncTask<Void, Void, Location>() {
 
+				private Location user;
+
+				@Override
+				protected Location doInBackground(Void... params) {
+					user = Utilities.getLocation(ParkingsActivity.this);
+					if (user == null) {
+						return null;
+					}
+					List<Parking> parkings = ParkingsDatasource.getInstance()
+							.getAllParkings();
+					Location min = new Location("");
+					min.setLatitude(parkings.get(0).getLat());
+					min.setLongitude(parkings.get(0).getLng());
+					float minDist = user.distanceTo(min);
+					for (Parking p : parkings) {
+						Location temp = new Location("");
+						temp.setLatitude(parkings.get(0).getLat());
+						temp.setLongitude(parkings.get(0).getLng());
+						float tempDist = user.distanceTo(temp);
+						if (Integer.parseInt(p.getPlaces()) > 0
+								&& tempDist < minDist) {
+							minDist = tempDist;
+							min = temp;
+						}
+					}
+					return min;
+				}
+
+				@Override
+				protected void onPostExecute(Location result) {
+					if (result == null) {
+						Toast.makeText(ParkingsActivity.this,
+								R.string.location_error, Toast.LENGTH_LONG)
+								.show();
+						return;
+					}
+					Intent intent = new Intent(
+							android.content.Intent.ACTION_VIEW,
+							Uri.parse("http://maps.google.com/maps?saddr="
+									+ user.getLatitude() + ","
+									+ user.getLongitude() + "&daddr="
+									+ result.getLatitude() + ","
+									+ result.getLongitude()));
+					startActivity(intent);
+				}
+			}.execute();
 		} else if (id == R.id.action_settings) {
 			Intent intent = new Intent(this,
 					es.deusto.p1justpark.settings.SettingsActivity.class);
