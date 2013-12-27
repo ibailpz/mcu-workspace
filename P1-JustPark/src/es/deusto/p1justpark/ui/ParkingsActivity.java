@@ -104,7 +104,6 @@ public class ParkingsActivity extends Activity implements
 
 			switch (item.getItemId()) {
 			case R.id.parking_favorite:
-				// FIXM Change favourite state
 				Parking parking = currentAdapter.getItem(position);
 				if (parking.isFavourite()) {
 					parking.setFavourite(false);
@@ -129,13 +128,34 @@ public class ParkingsActivity extends Activity implements
 				mode.finish();
 				return true;
 			case R.id.parking_navigate:
-				// FIXME Navigate to parking
-				Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-						Uri.parse("http://maps.google.com/maps?q="
-								+ currentAdapter.getItem(position).getLat()
-								+ ","
-								+ currentAdapter.getItem(position).getLng()));
-				startActivity(intent);
+				new AsyncTask<Void, Void, Location>() {
+					@Override
+					protected Location doInBackground(Void... params) {
+						return Utilities.getLocation(ParkingsActivity.this);
+					}
+
+					protected void onPostExecute(Location result) {
+						if (result == null) {
+							Toast.makeText(ParkingsActivity.this,
+									R.string.location_error, Toast.LENGTH_LONG)
+									.show();
+							return;
+						}
+						Intent intent = new Intent(
+								android.content.Intent.ACTION_VIEW,
+								Uri.parse("http://maps.google.com/maps?saddr="
+										+ result.getLatitude()
+										+ ","
+										+ result.getLongitude()
+										+ "&daddr="
+										+ currentAdapter.getItem(position)
+												.getLat()
+										+ ","
+										+ currentAdapter.getItem(position)
+												.getLng()));
+						startActivity(intent);
+					}
+				}.execute();
 				mode.finish();
 				return true;
 			case R.id.parking_share:
