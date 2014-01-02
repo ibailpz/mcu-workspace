@@ -368,6 +368,7 @@ public class ParkingsActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		ParkingsDatasource.removeDatabaseObserver(this);
 		ParkingsDatasource.getInstance().close();
 	}
 

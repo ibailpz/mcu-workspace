@@ -49,8 +49,10 @@ public final class Utilities {
 	}
 
 	public static void updateParkingsFromJSON(Context ctx) {
+		boolean localLoad = false;
 		if (ParkingsDatasource.getInstance() == null) {
 			ParkingsDatasource.initDatasource(ctx);
+			localLoad = true;
 		}
 		List<Parking> parkings = ParkingsDatasource.getInstance()
 				.getAllParkings();
@@ -94,6 +96,9 @@ public final class Utilities {
 		}
 		ParkingsDatasource.getInstance().updateAllParkings(parkings);
 		updateWidgets(ctx);
+		if (localLoad) {
+			ParkingsDatasource.getInstance().close();
+		}
 	}
 
 	private static void updateWidgets(Context ctx) {
@@ -104,7 +109,7 @@ public final class Utilities {
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 		ctx.sendBroadcast(intent);
 	}
-	
+
 	// Location
 
 	private static LocationClient mLocationClient;

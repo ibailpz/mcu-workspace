@@ -36,7 +36,7 @@ public class ParkingsFragment extends ListFragment implements
 			setupPull();
 		}
 	};
-	
+
 	private AdapterObserver observer;
 	private ArrayList<Parking> arrParkings;
 	private ArrayAdapter<Parking> adpParkings;
@@ -109,6 +109,12 @@ public class ParkingsFragment extends ListFragment implements
 	@Override
 	public void onUpdate() {
 		getActivity().runOnUiThread(hide);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		ParkingsDatasource.removeDatabaseObserver(this);
 	}
 
 }
