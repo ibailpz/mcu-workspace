@@ -13,6 +13,8 @@
     <string name="parking_address">Address</string>
     <string name="receive_notifications">Receive notifications when the number of places change</string>
     <string name="notifications">Notifications</string>
+    <string name="update">Update</string>
+    <string name="automatic_update">Automatic update</string>
     <string name="notifications_interval">Notifications interval</string>
     <string name="general_interval">Parking status update interval</string>
     <string name="switch_notifications">Enable notifications</string>

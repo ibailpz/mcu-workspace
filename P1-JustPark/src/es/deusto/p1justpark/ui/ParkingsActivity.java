@@ -6,7 +6,10 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -171,7 +174,10 @@ public class ParkingsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		ParkingsDatasource.addDatabaseObserver(this);
 		ParkingsDatasource.initDatasource(this);
-		startService(new Intent(this, ParkingUpdateService.class));
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				"automatic_update", true)) {
+			startService(new Intent(this, ParkingUpdateService.class));
+		}
 		createParkingsList();
 		loadParkings();
 		setActionBar(getActionBar());
@@ -202,13 +208,13 @@ public class ParkingsActivity extends Activity implements
 					List<Parking> parkings = ParkingsDatasource.getInstance()
 							.getAllParkings();
 					Location min = new Location("");
-					min.setLatitude(parkings.get(0).getLat());
-					min.setLongitude(parkings.get(0).getLng());
+					min.setLatitude(-user.getLatitude());
+					min.setLongitude(-user.getLongitude());
 					float minDist = user.distanceTo(min);
 					for (Parking p : parkings) {
 						Location temp = new Location("");
-						temp.setLatitude(parkings.get(0).getLat());
-						temp.setLongitude(parkings.get(0).getLng());
+						temp.setLatitude(p.getLat());
+						temp.setLongitude(p.getLng());
 						float tempDist = user.distanceTo(temp);
 						if (Integer.parseInt(p.getPlaces()) > 0
 								&& tempDist < minDist) {
@@ -356,13 +362,25 @@ public class ParkingsActivity extends Activity implements
 	}
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == settingsIntent) {
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+					"automatic_update", true)) {
+				startService(new Intent(this, ParkingUpdateService.class));
+			} else {
+				AlarmManager am = (AlarmManager) this
+						.getSystemService(Context.ALARM_SERVICE);
+				PendingIntent pi = ParkingUpdateService
+						.getServicePendingIntent(this);
+				am.cancel(pi);
+			}
+		}
+	}
+
+	@Override
 	protected void onPause() {
 		super.onPause();
-		// Log.i("Pause", "Saving data");
-		// (new
-		// ParkingManager(getApplicationContext())).saveParkings(arrParkings);
-		// (new ParkingManager(getApplicationContext()))
-		// .saveFavoriteParkings(arrFavoriteParkings);
 	}
 
 	@Override
@@ -392,11 +410,20 @@ public class ParkingsActivity extends Activity implements
 		if (ParkingsDatasource.getInstance().getAllParkings().isEmpty()) {
 			ArrayList<Parking> list = new ArrayList<Parking>();
 			list.add(new Parking(200, "Parking Plaza Euskadi",
-					"Plaza Euskadi, Bilbao", "100", 43.26723, -2.93839, false,
-					false, new Date()));
+					"Plaza Euskadi, 48009 Bilbao, Bizkaia", "", 43.26723,
+					-2.93839, false, false, new Date()));
 			list.add(new Parking(201, "Parking El Corte Ingles",
-					"Gran Via 19, Bilbao", "50", 43.18474, -2.47936, false,
-					true, new Date()));
+					"Gran Via 19, 48009 Bilbao, Bizkaia", "", 43.261950, -2.930847, false, false,
+					new Date()));
+			list.add(new Parking(202, "Parking Indautxu",
+					"Urquijo Aldapa 65, 48013 Bilbao, Bizkaia", "", 43.261201, -2.942305, false, false,
+					new Date()));
+			list.add(new Parking(203, "Parking Pio Baroja",
+					"Plaza de Pío Baroja, 48001 Bilbao, Bizkaia", "", 43.264151, -2.925873, false, false,
+					new Date()));
+			list.add(new Parking(204, "Parking Instituto Miguel de Unamuno",
+					"Calle Urquijo 14, 48009 Bilbao, Bizkaia", "", 43.264358, -2.932303, false, false,
+					new Date()));
 			for (Parking p : list) {
 				ParkingsDatasource.getInstance().createParking(p);
 			}
