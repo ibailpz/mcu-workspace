@@ -15,7 +15,6 @@ public class SettingsFragment extends PreferenceFragment implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 
-		// Register for changes in preferences
 		PreferenceManager.getDefaultSharedPreferences(getActivity())
 				.registerOnSharedPreferenceChangeListener(this);
 

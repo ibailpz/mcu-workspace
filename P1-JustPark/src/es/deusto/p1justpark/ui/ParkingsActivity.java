@@ -272,7 +272,6 @@ public class ParkingsActivity extends Activity implements
 		Bundle args = new Bundle();
 		switch (position) {
 		case 0:
-			// TOD Inflate adapter with arrParkings from BD
 			if (list == null) {
 				list = new ParkingsFragment();
 				args.putParcelableArrayList(ParkingsFragment.PARKINGS_ARRAY,
@@ -285,7 +284,6 @@ public class ParkingsActivity extends Activity implements
 			fragment = list;
 			break;
 		case 1:
-			// TOD Inflate adapter with arrFavoriteParkings from BD
 			args.putParcelableArrayList(ParkingsFragment.PARKINGS_ARRAY,
 					arrFavoriteParkings);
 			if (favs == null) {

@@ -17,7 +17,6 @@ public class WidgetProvider extends AppWidgetProvider {
 			ParkingsDatasource.initDatasource(context);
 		}
 
-		// Iterate all the widget instances
 		for (int i = 0; i < appWidgetIds.length; i++) {
 			int widgetId = appWidgetIds[i];
 			int parkingId = WidgetConfigurationActivity.loadParkingPref(
