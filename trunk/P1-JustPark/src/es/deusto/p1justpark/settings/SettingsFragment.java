@@ -38,6 +38,14 @@ public class SettingsFragment extends PreferenceFragment implements
 			findPreference(key).setSummary(
 					array[Integer.parseInt(sharedPreferences
 							.getString(key, "0"))]);
+		}else if(key.equals("automatic_update")) {
+			if(sharedPreferences.getBoolean(key, true)) {
+				findPreference("general_interval").setEnabled(true);
+				findPreference("switch_notifications").setEnabled(true);
+			}else {
+				findPreference("general_interval").setEnabled(false);
+				findPreference("switch_notifications").setEnabled(false);				
+			}
 		}
 	}
 
