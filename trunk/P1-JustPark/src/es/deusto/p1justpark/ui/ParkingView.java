@@ -2,7 +2,6 @@ package es.deusto.p1justpark.ui;
 
 import java.text.SimpleDateFormat;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,7 +27,7 @@ public class ParkingView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parking_info);
 
-		ActionBar actionBar = getActionBar();
+		// ActionBar actionBar = getActionBar();
 		// actionBar.setDisplayShowTitleEnabled(false);
 
 		Bundle extras = getIntent().getExtras();
@@ -36,7 +35,7 @@ public class ParkingView extends Activity {
 			parking = (Parking) extras.getParcelable(ParkingView.PARKING_KEY);
 			setParking(parking);
 		}
-		actionBar.setTitle(parking.getName());
+		// actionBar.setTitle(parking.getName());
 	}
 
 	@Override
