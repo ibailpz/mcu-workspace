@@ -164,10 +164,15 @@ public class ParkingsDatasource {
 		for (DatabaseObserver d : observers) {
 			d.onUpdate();
 		}
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-				"automatic_update", false)
+		if (PreferenceManager.getDefaultSharedPreferences(context)
+				.getBoolean(
+						context.getResources().getString(
+								R.string.automatic_update_key), false)
 				&& PreferenceManager.getDefaultSharedPreferences(context)
-						.getBoolean("switch_notifications", false)) {
+						.getBoolean(
+								context.getResources().getString(
+										R.string.switch_notifications_key),
+								false)) {
 			StringBuilder sb = new StringBuilder();
 			for (Parking p : updated) {
 				if (p.isNotifications()) {

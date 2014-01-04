@@ -175,7 +175,7 @@ public class ParkingsActivity extends Activity implements
 		ParkingsDatasource.addDatabaseObserver(this);
 		ParkingsDatasource.initDatasource(this);
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				"automatic_update", true)) {
+				getResources().getString(R.string.automatic_update_key), true)) {
 			startService(new Intent(this, ParkingUpdateService.class));
 		}
 		createParkingsList();
@@ -255,7 +255,9 @@ public class ParkingsActivity extends Activity implements
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		final String[] dropdownValues = { "All", "Favorites" };
+		final String[] dropdownValues = {
+				getResources().getString(R.string.all),
+				getResources().getString(R.string.favorites) };
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActionBar()
 				.getThemedContext(), android.R.layout.simple_spinner_item,
@@ -364,7 +366,8 @@ public class ParkingsActivity extends Activity implements
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == settingsIntent) {
 			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-					"automatic_update", true)) {
+					getResources().getString(R.string.automatic_update_key),
+					true)) {
 				startService(new Intent(this, ParkingUpdateService.class));
 			} else {
 				AlarmManager am = (AlarmManager) this
@@ -411,17 +414,17 @@ public class ParkingsActivity extends Activity implements
 					"Plaza Euskadi, 48009 Bilbao, Bizkaia", "", 43.26723,
 					-2.93839, false, false, new Date()));
 			list.add(new Parking(201, "Parking El Corte Ingles",
-					"Gran Via 19, 48009 Bilbao, Bizkaia", "", 43.261950, -2.930847, false, false,
-					new Date()));
+					"Gran Via 19, 48009 Bilbao, Bizkaia", "", 43.261950,
+					-2.930847, false, false, new Date()));
 			list.add(new Parking(202, "Parking Indautxu",
-					"Urquijo Aldapa 65, 48013 Bilbao, Bizkaia", "", 43.261201, -2.942305, false, false,
-					new Date()));
+					"Urquijo Aldapa 65, 48013 Bilbao, Bizkaia", "", 43.261201,
+					-2.942305, false, false, new Date()));
 			list.add(new Parking(203, "Parking Pio Baroja",
-					"Plaza de Pío Baroja, 48001 Bilbao, Bizkaia", "", 43.264151, -2.925873, false, false,
-					new Date()));
+					"Plaza de Pío Baroja, 48001 Bilbao, Bizkaia", "",
+					43.264151, -2.925873, false, false, new Date()));
 			list.add(new Parking(204, "Parking Instituto Miguel de Unamuno",
-					"Calle Urquijo 14, 48009 Bilbao, Bizkaia", "", 43.264358, -2.932303, false, false,
-					new Date()));
+					"Calle Urquijo 14, 48009 Bilbao, Bizkaia", "", 43.264358,
+					-2.932303, false, false, new Date()));
 			for (Parking p : list) {
 				ParkingsDatasource.getInstance().createParking(p);
 			}

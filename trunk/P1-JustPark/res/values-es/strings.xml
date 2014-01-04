@@ -1,0 +1,36 @@
+<resources>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="added_favourite">%1$s añadido a favoritos</string>
+    <string name="all">Todos</string>
+    <string name="automatic_update">Actualizaciones automáticas</string>
+    <string name="coords">Coordenadas</string>
+    <string name="favorites">Favoritos</string>
+    <string name="free_places">Plazas libres</string>
+    <string name="general_interval">Intervalo de actualización de parkings</string>
+    <string name="last_updated_note">(última actualización %1$s)</string>
+    <string name="location">Ubicación</string>
+    <string name="location_error">Error obteniendo la ubicación. Compruebe el GPS e inténtelo de nuevo</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="parking_add_favorite">Añadir a favoritos</string>
+    <string name="parking_address">Dirección</string>
+    <string name="parking_location">Ubicación del parking</string>
+    <string name="parking_name">Nombre</string>
+    <string name="parking_navigate">Navegar</string>
+    <string name="parking_places">Plazas</string>
+    <string name="parking_remove_favorite">Eliminar de favoritos</string>
+    <string name="parking_share">Compartir</string>
+    <string name="receive_notifications">Recibir notificaciones cuando el número de plazas cambie</string>
+    <string name="remove_favourite">%1$s eliminado de favoritos</string>
+    <string name="search_close">Buscar más cercano</string>
+    <string name="switch_notifications">Habilitar notificaciones</string>
+    <string name="update">Actualizar</string>
+    <string name="view_map">Ver parking en el mapa</string>
+
+    <string-array name="general_interval">
+        <item>Cada 5 minutos</item>
+        <item>Cada 10 minutos</item>
+        <item>Cada 15 minutos</item>
+    </string-array>
+
+</resources>
