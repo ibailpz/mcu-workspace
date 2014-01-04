@@ -27,15 +27,11 @@ public class ParkingView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parking_info);
 
-		// ActionBar actionBar = getActionBar();
-		// actionBar.setDisplayShowTitleEnabled(false);
-
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			parking = (Parking) extras.getParcelable(ParkingView.PARKING_KEY);
 			setParking(parking);
 		}
-		// actionBar.setTitle(parking.getName());
 	}
 
 	@Override
@@ -54,21 +50,22 @@ public class ParkingView extends Activity {
 		ImageView iv = (ImageView) findViewById(R.id.map);
 
 		ed1.setText(parking.getName());
-		// ed1.setTypeface(null, Typeface.BOLD);
 		ed2.setText(parking.getPlaces());
-		// ed2.setTypeface(null, Typeface.BOLD);
 		String date = SimpleDateFormat.getDateTimeInstance(
 				SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(
 				parking.getLastUpdatedTime());
 		ed3.setText(String.format(
 				getResources().getString(R.string.last_updated_note), date));
 		ed4.setText(parking.getAddress());
-		// ed3.setTypeface(null, Typeface.BOLD);
 		ed5.setText(parking.getLat() + ", " + parking.getLng());
-		// ed3.setTypeface(null, Typeface.BOLD);
 		cb.setChecked(parking.isNotifications());
 		if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				"switch_notifications", false)) {
+				getResources().getString(R.string.automatic_update_key), true)
+				|| !PreferenceManager.getDefaultSharedPreferences(this)
+						.getBoolean(
+								getResources().getString(
+										R.string.switch_notifications_key),
+								false)) {
 			cb.setEnabled(false);
 		}
 		iv.setOnClickListener(new OnClickListener() {

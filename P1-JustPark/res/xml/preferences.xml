@@ -6,14 +6,14 @@
         android:title="@string/update" >
         <SwitchPreference
             android:defaultValue="true"
-            android:key="automatic_update"
+            android:key="@string/automatic_update_key"
             android:title="@string/automatic_update" />
 
         <ListPreference
             android:defaultValue="2"
             android:entries="@array/general_interval"
             android:entryValues="@array/order"
-            android:key="general_interval"
+            android:key="@string/general_interval_key"
             android:title="@string/general_interval" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -21,7 +21,7 @@
         android:title="@string/notifications" >
         <SwitchPreference
             android:defaultValue="true"
-            android:key="switch_notifications"
+            android:key="@string/switch_notifications_key"
             android:title="@string/switch_notifications" />
     </PreferenceCategory>
 

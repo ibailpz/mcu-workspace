@@ -21,29 +21,63 @@ public class SettingsFragment extends PreferenceFragment implements
 		String[] array = getResources()
 				.getStringArray(R.array.general_interval);
 
-		findPreference("general_interval").setSummary(
-				array[Integer.parseInt(PreferenceManager
-						.getDefaultSharedPreferences(getActivity()).getString(
-								"general_interval", "0"))]);
+		findPreference(getResources().getString(R.string.general_interval_key))
+				.setSummary(
+						array[Integer.parseInt(PreferenceManager
+								.getDefaultSharedPreferences(getActivity())
+								.getString(
+										getResources().getString(
+												R.string.general_interval_key),
+										"0"))]);
 
+		if (PreferenceManager
+				.getDefaultSharedPreferences(getActivity())
+				.getBoolean(
+						getResources().getString(R.string.automatic_update_key),
+						true)) {
+			findPreference(
+					getResources().getString(R.string.general_interval_key))
+					.setEnabled(true);
+			findPreference(
+					getResources().getString(R.string.switch_notifications_key))
+					.setEnabled(true);
+		} else {
+			findPreference(
+					getResources().getString(R.string.general_interval_key))
+					.setEnabled(false);
+			findPreference(
+					getResources().getString(R.string.switch_notifications_key))
+					.setEnabled(false);
+		}
 	}
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals("general_interval")) {
+		if (key.equals(getResources().getString(R.string.general_interval_key))) {
 			String[] array = getResources().getStringArray(
 					R.array.general_interval);
 			findPreference(key).setSummary(
 					array[Integer.parseInt(sharedPreferences
 							.getString(key, "0"))]);
-		}else if(key.equals("automatic_update")) {
-			if(sharedPreferences.getBoolean(key, true)) {
-				findPreference("general_interval").setEnabled(true);
-				findPreference("switch_notifications").setEnabled(true);
-			}else {
-				findPreference("general_interval").setEnabled(false);
-				findPreference("switch_notifications").setEnabled(false);				
+		} else if (key.equals(getResources().getString(
+				R.string.automatic_update_key))) {
+			if (sharedPreferences.getBoolean(key, true)) {
+				findPreference(
+						getResources().getString(R.string.general_interval_key))
+						.setEnabled(true);
+				findPreference(
+						getResources().getString(
+								R.string.switch_notifications_key)).setEnabled(
+						true);
+			} else {
+				findPreference(
+						getResources().getString(R.string.general_interval_key))
+						.setEnabled(false);
+				findPreference(
+						getResources().getString(
+								R.string.switch_notifications_key)).setEnabled(
+						false);
 			}
 		}
 	}

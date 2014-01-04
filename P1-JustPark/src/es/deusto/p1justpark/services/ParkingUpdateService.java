@@ -22,11 +22,12 @@ public class ParkingUpdateService extends IntentService {
 		Utilities.updateParkingsFromJSON(this);
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				"automatic_update", true)) {
+				getResources().getString(R.string.automatic_update_key), true)) {
 			int[] array = getResources().getIntArray(R.array.general_times);
 			int time = array[Integer.parseInt(PreferenceManager
 					.getDefaultSharedPreferences(this).getString(
-							"general_interval", "0"))];
+							getResources().getString(
+									R.string.general_interval_key), "0"))];
 
 			AlarmManager am = (AlarmManager) this
 					.getSystemService(Context.ALARM_SERVICE);
