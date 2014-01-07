@@ -1,12 +1,17 @@
 package es.deusto.p1justpark.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.db.ParkingsDatasource;
+import es.deusto.p1justpark.ui.ParkingView;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -47,6 +52,25 @@ public class WidgetProvider extends AppWidgetProvider {
 			views.setTextViewText(R.id.widget_parking_name, parking.getName());
 			views.setTextViewText(R.id.widget_parking_places, parking
 					.getPlaces().toString());
+
+			Intent intent = null;
+			int widgetOption = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(
+					context.getResources().getString(
+							R.string.widget_preference_key), "0"));
+			
+			if(widgetOption == 0) {
+				intent = new Intent(context, ParkingView.class);
+				intent.putExtra(ParkingView.PARKING_KEY, parking);
+			}else if(widgetOption == 1) {
+				intent = new Intent(android.content.Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?q="
+								+ parking.getLat() + ","
+								+ parking.getLng()));
+			}
+
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+					intent, PendingIntent.FLAG_CANCEL_CURRENT);
+			views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 		}
 
 		appWidgetManager.updateAppWidget(appWidgetId, views);

@@ -33,6 +33,10 @@
     <string name="switch_notifications_key">switch_notifications</string>
     <string name="updates_category_key">updates_category</string>
     <string name="notifications_category_key">notifications_category</string>
+    <string name="third_category">Thirdcategory</string>
+    <string name="widget">Widget</string>
+    <string name="widget_preference_key">widgetkey</string>
+    <string name="widget_behaviour">Widget behaviour</string>
 
     <string-array name="general_interval">
         <item>Every 5 minutes</item>
@@ -43,6 +47,10 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="widget_values">
+        <item>View parking info</item>
+        <item>View parking in map</item>
     </string-array>
 
 </resources>

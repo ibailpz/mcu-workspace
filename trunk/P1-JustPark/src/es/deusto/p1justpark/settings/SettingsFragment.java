@@ -30,6 +30,21 @@ public class SettingsFragment extends PreferenceFragment implements
 												R.string.general_interval_key),
 										"0"))]);
 
+		String[] array_widget = getResources().getStringArray(
+				R.array.widget_values);
+
+		findPreference(getResources().getString(R.string.widget_preference_key))
+				.setSummary(
+						array_widget[Integer
+								.parseInt(PreferenceManager
+										.getDefaultSharedPreferences(
+												getActivity())
+										.getString(
+												getResources()
+														.getString(
+																R.string.widget_preference_key),
+												"0"))]);
+
 		if (PreferenceManager
 				.getDefaultSharedPreferences(getActivity())
 				.getBoolean(
@@ -83,6 +98,24 @@ public class SettingsFragment extends PreferenceFragment implements
 									R.string.switch_notifications_key))
 							.setEnabled(false);
 				}
+			} else if (key.equals(getResources().getString(
+					R.string.widget_preference_key))) {
+				String[] array = getResources().getStringArray(
+						R.array.widget_values);
+
+				findPreference(
+						getResources()
+								.getString(R.string.widget_preference_key))
+						.setSummary(
+								array[Integer
+										.parseInt(PreferenceManager
+												.getDefaultSharedPreferences(
+														getActivity())
+												.getString(
+														getResources()
+																.getString(
+																		R.string.widget_preference_key),
+														"0"))]);
 			}
 		}
 	}

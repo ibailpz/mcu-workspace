@@ -24,5 +24,15 @@
             android:key="@string/switch_notifications_key"
             android:title="@string/switch_notifications" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="third_category"
+        android:title="@string/widget" >
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/widget_values"
+            android:entryValues="@array/order"
+            android:key="@string/widget_preference_key"
+            android:title="@string/widget_behaviour" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
