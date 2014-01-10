@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,19 +83,25 @@ public class ParkingsFragment extends ListFragment implements
 		adpParkings = new ParkingsAdapter(getActivity(), arrParkings);
 		setListAdapter(adpParkings);
 		observer.onAdapterChanged(adpParkings);
+		Parking parking = getActivity().getIntent().getParcelableExtra(
+				ParkingsActivity.LAUNCH_PARKING_KEY);
+		if (parking != null) {
+			getActivity().getIntent().putExtra(
+					ParkingsActivity.LAUNCH_PARKING_KEY, (Parcelable) null);
+			viewParking(parking);
+		}
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		viewParking(position);
+		viewParking(arrParkings.get(position));
 		if (getListView().getCheckedItemPosition() > -1) {
 			getListView().setItemChecked(
 					getListView().getCheckedItemPosition(), false);
 		}
 	}
 
-	private void viewParking(int position) {
-		Parking parking = arrParkings.get(position);
+	private void viewParking(Parking parking) {
 		Intent intent = new Intent(getActivity(), ParkingView.class);
 		intent.putExtra(ParkingView.PARKING_KEY, parking);
 		startActivity(intent);

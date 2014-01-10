@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.ui.ParkingsActivity;
+import es.deusto.p1justpark.util.Utilities;
 
 public class ParkingsDatasource {
 
@@ -140,8 +141,9 @@ public class ParkingsDatasource {
 		ContentValues values = getContentValues(p);
 		database.update(DatabaseHelper.TABLE_PARKINGS, values,
 				DatabaseHelper.COLUMN_ID + " = " + p.getId(), null);
+		Utilities.updateWidgets(context);
 		if (notify) {
-			ArrayList<Parking> al = new ArrayList<Parking>(1);
+			ArrayList<Parking> al = new ArrayList<Parking>(0);
 			notifyObservers(al);
 		}
 	}

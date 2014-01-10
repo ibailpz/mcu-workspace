@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 import es.deusto.p1justpark.R;
 import es.deusto.p1justpark.data.Parking;
 import es.deusto.p1justpark.db.ParkingsDatasource;
-import es.deusto.p1justpark.ui.ParkingView;
+import es.deusto.p1justpark.ui.ParkingsActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -54,18 +54,18 @@ public class WidgetProvider extends AppWidgetProvider {
 					.getPlaces().toString());
 
 			Intent intent = null;
-			int widgetOption = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(
-					context.getResources().getString(
-							R.string.widget_preference_key), "0"));
-			
-			if(widgetOption == 0) {
-				intent = new Intent(context, ParkingView.class);
-				intent.putExtra(ParkingView.PARKING_KEY, parking);
-			}else if(widgetOption == 1) {
+			int widgetOption = Integer.parseInt(PreferenceManager
+					.getDefaultSharedPreferences(context).getString(
+							context.getResources().getString(
+									R.string.widget_preference_key), "0"));
+
+			if (widgetOption == 0) {
+				intent = new Intent(context, ParkingsActivity.class);
+				intent.putExtra(ParkingsActivity.LAUNCH_PARKING_KEY, parking);
+			} else if (widgetOption == 1) {
 				intent = new Intent(android.content.Intent.ACTION_VIEW,
 						Uri.parse("http://maps.google.com/maps?q="
-								+ parking.getLat() + ","
-								+ parking.getLng()));
+								+ parking.getLat() + "," + parking.getLng()));
 			}
 
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
