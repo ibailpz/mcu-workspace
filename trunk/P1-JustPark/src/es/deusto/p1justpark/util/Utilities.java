@@ -101,7 +101,7 @@ public final class Utilities {
 		}
 	}
 
-	private static void updateWidgets(Context ctx) {
+	public static void updateWidgets(Context ctx) {
 		int ids[] = AppWidgetManager.getInstance(ctx).getAppWidgetIds(
 				new ComponentName(ctx, WidgetProvider.class));
 		Intent intent = new Intent(ctx, WidgetProvider.class);

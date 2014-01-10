@@ -36,6 +36,7 @@ import es.deusto.p1justpark.util.Utilities;
 public class ParkingsActivity extends Activity implements
 		ActionBar.OnNavigationListener, AdapterObserver, DatabaseObserver {
 
+	public static final String LAUNCH_PARKING_KEY = "LAUNCH_PARKING_KEY";
 	private static final int settingsIntent = 1;
 	private static final String STATE_TYPE_LIST = "all_or_favorites";
 
