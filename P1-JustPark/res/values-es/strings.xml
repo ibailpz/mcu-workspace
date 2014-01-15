@@ -26,11 +26,17 @@
     <string name="switch_notifications">Habilitar notificaciones</string>
     <string name="update">Actualizar</string>
     <string name="view_map">Ver parking en el mapa</string>
+    <string name="widget_behaviour">Comportamiento del widget</string>
 
     <string-array name="general_interval">
         <item>Cada 5 minutos</item>
         <item>Cada 10 minutos</item>
         <item>Cada 15 minutos</item>
+    </string-array>
+    
+    <string-array name="widget_values">
+        <item>Ver información del parking</item>
+        <item>Ver parking en el mapa</item>
     </string-array>
 
 </resources>
